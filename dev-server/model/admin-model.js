@@ -2,24 +2,22 @@ import mongoose from 'mongoose'
 import { StringUtil } from '../utillities/string-util'
 import bcrypt from 'bcrypt-nodejs'
 
-const userSchema = new mongoose.Schema({
-    verified: Boolean,
+const adminSchema = new mongoose.Schema({
     username: String,
     password: String,
     firstname: String,
     lastname: String
 
 })
-userSchema.virtual('fullname').get(function() {
+adminSchema.virtual('fullname').get(function() {
     const firstname = StringUtil.capitalize(this.firstname.toLowerCase())
     const lastname = StringUtil.capitalize(this.lastname.toLowerCase())
     return `${firstname} ${lastname}`
 })
-userSchema.statics.passwordMatches = function(password, hash) {
+adminSchema.statics.passwordMatches = function(password, hash) {
     return bcrypt.compareSync(password, hash)
 }
-userSchema.pre('save', function(next) {
-    this.verified = false
+adminSchema.pre('save', function(next) {
     this.username = this.username.toLowerCase()
     this.firstname = this.firstname.toLowerCase()
     this.lastname = this.lastname.toLowerCase()
@@ -28,4 +26,4 @@ userSchema.pre('save', function(next) {
     next()
 })
 
-export default mongoose.model('users', userSchema)
+export default mongoose.model('admins', adminSchema)
