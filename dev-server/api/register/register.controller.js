@@ -1,18 +1,18 @@
 import { StringUtil } from '../../utillities/string-util'
-import User from '../../model/user-model'
+import Admin from '../../model/admin-model'
 export function index(req, res) {
     const validation = validateIndex(req.body)
     if (!validation.isValid) {
         return res.status(400).json({ message: validation.message })
     }
 
-    const user = new User({
+    const admin = new Admin({
         username: req.body.username,
         password: req.body.password,
         firstname: req.body.firstname,
         lastname: req.body.lastname
     })
-    user.save(error => {
+    admin.save(error => {
         if (error) {
             if (error.code === 11000) {
                 return res.status(403).json({ message: 'Username is already taken' })
